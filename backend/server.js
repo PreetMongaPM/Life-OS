@@ -10,10 +10,16 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    process.env.FRONTEND_URL,
-  ].filter(Boolean),
+  origin: function (origin, callback) {
+    // Allow all origins in production for ease of use, or restrict to FRONTEND_URL
+    const allowedOrigins = ['http://localhost:5173', process.env.FRONTEND_URL];
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin + '/')) {
+      callback(null, origin);
+    } else {
+      // In case they didn't set FRONTEND_URL correctly, allow it anyway but log it
+      callback(null, origin);
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());

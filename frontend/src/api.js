@@ -1,7 +1,14 @@
 import axios from 'axios';
 
+let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Automatically append /api if the user forgot it in their environment variable
+if (import.meta.env.VITE_API_URL && !apiUrl.endsWith('/api')) {
+  // Remove trailing slash if present before appending /api
+  apiUrl = apiUrl.replace(/\/$/, '') + '/api';
+}
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: apiUrl,
 });
 
 API.interceptors.request.use((config) => {
